@@ -9,7 +9,7 @@ import sys
 logging.basicConfig(filename='autoresponder.log',level=logging.DEBUG)
 logging.debug('Inizio elaborazione nuovo messaggio...')
 
-blacklist = ['linkedin.com', 'noreply', 'facebook.com', 'twitter.com', 'silvergeko.it']
+blacklist = ['linkedin.com', 'noreply', 'facebook.com', 'twitter.com']
 
 if len(sys.argv) > 1 :
    mail = sys.argv[1]
