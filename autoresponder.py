@@ -5,9 +5,10 @@ from email.mime.text import MIMEText
 from email.parser import Parser
 import logging
 import sys
+import re
 
 logging.basicConfig(filename='autoresponder.log',level=logging.DEBUG)
-logging.debug('Inizio elaborazione nuovo messaggio...')
+
 
 blacklist = ['linkedin.com', 'noreply', 'facebook.com', 'twitter.com']
 
@@ -18,6 +19,11 @@ else:
 headers = None
 if mail:
     send = True
+    valid = True
+    logging.debug('Inizio elaborazione nuovo messaggio...')
+    if len(re.findall(r"[a-zA-Z0-9._]+\@[a-zA-Z0-9._]+\.[a-zA-Z]{2,}", mail)) == 0:
+        valid = False
+        logging.debug('Indirizzo non valido')
     headers = Parser().parsestr(mail)
     fp = open("/path/to/email.txt/file", 'rb')
 
@@ -38,7 +44,7 @@ if mail:
             logging.debug('Destinatario %s in whitelist' % headers['from'])
 
     s = smtplib.SMTP('localhost')
-    if send:
+    if send and valid:
         s.sendmail(headers['to'], [headers['from']], msg.as_string())
         logging.debug('Messaggio inviato')
     else:
